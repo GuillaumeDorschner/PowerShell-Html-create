@@ -14,23 +14,19 @@ $index = 0
 $css = "
 <link rel=`"stylesheet`"  href=`" https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css`"  integrity=`" sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh`"  crossorigin=`" anonymous`">
 <link rel=`" stylesheet`"  type=`" text/css`"  href=`" https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css`">
-
-
 <style>
 :root{
     --primaryColour: #2E74B5;
 }
-
 *{
     margin: 0;
     padding: 0;
 }
-
 body{
     width: 100%;
     height: 100vh;
+    overflow: hidden;
 }
-
 .top{
     width: 100%;
     height: 200px;
@@ -38,7 +34,6 @@ body{
     border: 5px solid #000000;
     background: var(--primaryColour);
 }
-
 .logo{
     display: flex;
     align-items: center;
@@ -47,12 +42,10 @@ body{
     height: 100%;
     color: #ffffff;
 }
-
 .top > span{
     width: 5px;
     background: #000000;
 }
-
 .title{
     display: flex;
     align-items: center;
@@ -62,7 +55,6 @@ body{
     font-size: 40px;
     color: #ffffff;
 }
-
 .date{
     position: absolute;
     right: 10px;
@@ -70,6 +62,18 @@ body{
     color: #ffffff;
 }
 
+.accordeon{
+    position: absolute;
+    right: 0;
+    top: 200px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.hidd{
+    visibility: hidden;
+}
 
 .bottom{
     position: absolute;
@@ -80,12 +84,19 @@ body{
     width: 100%;
     height: 40px;
     background: var(--primaryColour);
-    color: #ffffff; 
+    color: #ffffff;
 }
-
 </style>"
 
 $Body = "
+<div class=`"accordeon`">
+    <div id=`"croix`">
+        <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z`"/></svg>
+    </div>
+    <div id=`"troisbarres`">
+        <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M2 15.5v2h20v-2H2zm0-5v2h20v-2H2zm0-5v2h20v-2H2z`"/></svg>
+    </div>
+</div>
 <div class=`"date`">" + $(Get-Date -Format "dd/MM/yyyy") + "</div>
 <div class=`"top`">
     <div class=`"logo`">
@@ -108,14 +119,13 @@ $Body = "
 </div>
 <div class=`"container`">
     <div class=`"rapport`">
-        <h3>Rapport du 27 mai 2020</h3>
+        <h3>Rapport du " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
         <ul>
-            <li>" + (Get-ChildItem $file1 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire A</li>
-            <li>" + (Get-ChildItem $file2 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire B</li>
+            <li>" + (Get-ChildItem $file1 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire " + (Split-Path -Path $file1 -Parent) + "</li>
+            <li>" + (Get-ChildItem $file2 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire " + (Split-Path -Path $file2 -Parent) + "</li>
         </ul>
     </div>
 </div>
-
 <div class=`"tableau`">
     <table id=`"table_id`" class=`"display`">
         <thead>
@@ -141,7 +151,7 @@ $Body = "
             "<tr>"
             "<td>" + $index + "</th>"
             if($Name -like '*Oui*'){
-                "<td><a href="`"file:///$file`"">" + $file.Name + "</a></td>"
+                "<td><a href="`"file:///$file`"" title="`"yehh`"">" + $file.Name + "</a></td>"
             }
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
@@ -154,7 +164,7 @@ $Body = "
             "<td>" + $file.LastWriteTime + "</td>"
             "</tr>"
         })
-        $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
+        $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
             $index++
             "<tr>"
             "<td>" + $index + "</th>"
@@ -177,12 +187,9 @@ $Body = "
 </div>
 <br>
 <p>Resultat de la recherche via le script</p>
-
 <div class=`" bottom`" >
     <h3>Banque de France - 2020</h3>
 </div>
-
-
 <script  src=`" https://code.jquery.com/jquery-3.5.1.js`"   integrity=`" sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=`"   crossorigin=`" anonymous`" ></script>
 <script type=`" text/javascript`"  charset=`" utf8`"  src=`" https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js`" ></script>
 <script>
