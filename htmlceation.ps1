@@ -141,7 +141,7 @@ $Body = "
             "<tr>"
             "<td>" + $index + "</th>"
             if($Name -like '*Oui*'){
-                "<td> <a href=`"file:///" + $(file.Fullname) + "`">" + $file.Name + "</a></td>"
+                "<td><a href=`"file:///" + $file.Fullname + "`">" + $file.Name + "</a></td>"
             }
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
