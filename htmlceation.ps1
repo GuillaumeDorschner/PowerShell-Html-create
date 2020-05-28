@@ -9,6 +9,7 @@ $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -In
 $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
 
 $index = 0
+$indexId = 0
 
 
 $css = "
@@ -151,7 +152,7 @@ $Body = "
             "<tr>"
             "<td>" + $index + "</th>"
             if($Name -like '*Oui*'){
-                "<td><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
+                "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
             }
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
@@ -203,7 +204,17 @@ $Body = "
         `$(`".tableau`").toggle(500);
         `$(`".rapport`").toggle(500);
         `$(`".search`").toggle(500);
-     })
+    })
+    # $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
+    #     $indexId++
+    #     # "$indexId"
+    #     "`$(`"#1`").click(() => {
+    #         `$(`"#croix`").toggle();
+    #         `$(`".tableau`").toggle(500);
+    #         `$(`".rapport`").toggle(500);
+    #         `$(`".search`").toggle(500);
+    #      })"
+    # })
 </script>
 "
 
