@@ -127,6 +127,7 @@ $Body = "
             if($Taille -like '*Oui*'){
                 "<th>Length</th>"
             }
+            "<th>Path</th>"
             if($Date -like '*Oui*'){
                 "<th>CreationTime</th>"
             })
@@ -145,6 +146,7 @@ $Body = "
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
             }
+            "<td>" + $file.Fullname + "</td>"
             if($Date -like '*Oui*'){
                 "<td>" + $file.CreationTime + "</td>"
             }
@@ -152,7 +154,7 @@ $Body = "
             "<td>" + $file.LastWriteTime + "</td>"
             "</tr>"
         })
-        $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
+        $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
             $index++
             "<tr>"
             "<td>" + $index + "</th>"
@@ -162,6 +164,7 @@ $Body = "
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
             }
+            "<td>" + $file.Fullname + "</td>"
             if($Date -like '*Oui*'){
                 "<td>" + $file.CreationTime + "</td>"
             }
