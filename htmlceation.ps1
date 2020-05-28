@@ -72,7 +72,7 @@ body{
 }
 
 .hidd{
-    visibility: hidden;
+    display: none;
 }
 
 .bottom{
@@ -118,11 +118,11 @@ $Body = "
     </div>
 </div>
 <div class=`"container`">
+<h3>Rapport du " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
     <div class=`"rapport`">
-        <h3>Rapport du " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
         <ul>
-            <li>" + (Get-ChildItem $file1 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire " + (Split-Path -Path $file1 -Parent) + "</li>
-            <li>" + (Get-ChildItem $file2 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire " + (Split-Path -Path $file2 -Parent) + "</li>
+            <li>" + (Get-ChildItem $file1 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $file1 -Leaf) + "</b></li>
+            <li>" + (Get-ChildItem $file2 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $file2 -Leaf) + "</b></li>
         </ul>
     </div>
 </div>
@@ -151,7 +151,7 @@ $Body = "
             "<tr>"
             "<td>" + $index + "</th>"
             if($Name -like '*Oui*'){
-                "<td><a href="`"file:///$file`"" title="`"yehh`"">" + $file.Name + "</a></td>"
+                "<td><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
             }
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
@@ -186,7 +186,9 @@ $Body = "
     </table>
 </div>
 <br>
-<p>Resultat de la recherche via le script</p>
+<div class=`"search hidd`">
+    <p>Resultat de la recherche via le script</p>
+</div>
 <div class=`" bottom`" >
     <h3>Banque de France - 2020</h3>
 </div>
@@ -196,6 +198,12 @@ $Body = "
     `$(document).ready( function () {
         `$(`"#table_id`").DataTable();
     } );
+    `$(`".accordeon`").click(() => {
+        `$(`"#croix`").toggle();
+        `$(`".tableau`").toggle(500);
+        `$(`".rapport`").toggle(500);
+        `$(`".search`").toggle(500);
+     })
 </script>
 "
 
