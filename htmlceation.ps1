@@ -62,7 +62,6 @@ body{
     top: 10px;
     color: #ffffff;
 }
-
 .accordeon{
     position: absolute;
     right: 0;
@@ -71,11 +70,9 @@ body{
     height: 40px;
     overflow: hidden;
 }
-
 .hidd{
     display: none;
 }
-
 .bottom{
     position: absolute;
     display: flex;
@@ -207,6 +204,24 @@ $Body = "
         `$( `"#theImg`" ).remove();
     })
     " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse){
+        $indexId++
+        "`$(`"#" + $indexId + "`").click( ()=> {
+            `$(`"#croix`").toggle();
+            `$(`".tableau`").toggle(500);
+            `$(`".rapport`").toggle(500);
+            `$(`".search`").toggle(500);"
+# if text
+
+
+# if image
+$pattern = '[\\]'
+$nameimage = $file.Fullname
+$nameimage = $nameimage -replace $pattern, '/'
+"`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`"     width=`"200px`"  height=`"200px`"/>')"
+            "
+        })`n"
+    }) + "
+    " + $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse){
         $indexId++
         "`$(`"#" + $indexId + "`").click( ()=> {
             `$(`"#croix`").toggle();
