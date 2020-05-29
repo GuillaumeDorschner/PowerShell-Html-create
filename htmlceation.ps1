@@ -205,16 +205,13 @@ $Body = "
         `$(`".rapport`").toggle(500);
         `$(`".search`").toggle(500);
     })
-    # $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
-    #     $indexId++
-    #     # "$indexId"
-    #     "`$(`"#1`").click(() => {
-    #         `$(`"#croix`").toggle();
-    #         `$(`".tableau`").toggle(500);
-    #         `$(`".rapport`").toggle(500);
-    #         `$(`".search`").toggle(500);
-    #      })"
-    # })
+    `$(`"#1`").click( ()=> {
+        `$(`"#croix`").toggle();
+        `$(`".tableau`").toggle(500);
+        `$(`".rapport`").toggle(500);
+        `$(`".search`").toggle(500);
+        `$(`".search`").prepend('<img id=`"theImg`" src=`"C:/Users/guill/Desktop/Stage BDF/Rapport logs/test/Gull_portrait_ca_usa.jpg`"     width=`"200px`"  height=`"200px `"/>')
+    })
 </script>
 "
 
