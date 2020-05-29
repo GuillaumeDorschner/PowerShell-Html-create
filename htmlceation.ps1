@@ -19,15 +19,18 @@ $css = "
 :root{
     --primaryColour: #2E74B5;
 }
+
 *{
     margin: 0;
     padding: 0;
 }
+
 body{
     width: 100%;
     height: 100vh;
     overflow: hidden;
 }
+
 .top{
     width: 100%;
     height: 200px;
@@ -35,6 +38,7 @@ body{
     border: 5px solid #000000;
     background: var(--primaryColour);
 }
+
 .logo{
     display: flex;
     align-items: center;
@@ -43,10 +47,12 @@ body{
     height: 100%;
     color: #ffffff;
 }
+
 .top > span{
     width: 5px;
     background: #000000;
 }
+
 .title{
     display: flex;
     align-items: center;
@@ -56,12 +62,14 @@ body{
     font-size: 40px;
     color: #ffffff;
 }
+
 .date{
     position: absolute;
     right: 10px;
     top: 10px;
     color: #ffffff;
 }
+
 .accordeon{
     position: absolute;
     right: 0;
@@ -70,9 +78,16 @@ body{
     height: 40px;
     overflow: hidden;
 }
+
 .hidd{
     display: none;
 }
+
+.search{
+    width: 50%;
+    margin: auto;
+}
+
 .bottom{
     position: absolute;
     display: flex;
@@ -205,31 +220,53 @@ $Body = "
     })
     " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse){
         $indexId++
+        $extn = [IO.Path]::GetExtension($file)
         "`$(`"#" + $indexId + "`").click( ()=> {
             `$(`"#croix`").toggle();
             `$(`".tableau`").toggle(500);
             `$(`".rapport`").toggle(500);
             `$(`".search`").toggle(500);"
-# if text
-
-
-# if image
-$pattern = '[\\]'
-$nameimage = $file.Fullname
-$nameimage = $nameimage -replace $pattern, '/'
-"`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`"     width=`"200px`"  height=`"200px`"/>')"
-            "
-        })`n"
+            # if text
+            if ($extn -eq ".txt") {
+                $textfile = Get-Content $file
+                "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
+            }
+            # if image
+            elseif ($extn -eq ".jpg") {  
+                $pattern = '[\\]'
+                $nameimage = $file.Fullname
+                $nameimage = $nameimage -replace $pattern, '/'
+                "`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`" height=`"400px`"/>')})`n"
+            }
+            # else put error
+            else{
+                "`$(`".search`").prepend('<p id=`"theImg`">The file can t be read. You need to have a .txt / .jpg / .png</p>')})`n" 
+            }
     }) + "
     " + $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse){
         $indexId++
+        $extn = [IO.Path]::GetExtension($file)
         "`$(`"#" + $indexId + "`").click( ()=> {
             `$(`"#croix`").toggle();
             `$(`".tableau`").toggle(500);
             `$(`".rapport`").toggle(500);
-            `$(`".search`").toggle(500);
-            `$(`".search`").prepend('<img id=`"theImg`" src=`"C:/Users/guill/Desktop/Stage BDF/Rapport logs/test/Gull_portrait_ca_usa.jpg`"     width=`"200px`"  height=`"200px`"/>')
-        })`n"
+            `$(`".search`").toggle(500);"
+            # if text
+            if ($extn -eq ".txt") {
+                $textfile = Get-Content $file
+                "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
+            }
+            # if image
+            elseif ($extn -eq ".jpg") {  
+                $pattern = '[\\]'
+                $nameimage = $file.Fullname
+                $nameimage = $nameimage -replace $pattern, '/'
+                "`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`" height=`"400px`"/>')})`n"
+            }
+            # else put error
+            else{
+                "`$(`".search`").prepend('<p id=`"theImg`">The file can t be read. You need to have a .txt / .jpg / .png</p>')})`n" 
+            }
     }) + "
 </script>
 "
