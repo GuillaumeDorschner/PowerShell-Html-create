@@ -170,7 +170,7 @@ $Body = "
             "<tr>"
             "<td>" + $index + "</th>"
             if($Name -like '*Oui*'){
-                "<td><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
+                "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
             }
             if($Taille -like '*Oui*'){
                 "<td>" + $file.Length + "</td>"
@@ -204,14 +204,18 @@ $Body = "
         `$(`".tableau`").toggle(500);
         `$(`".rapport`").toggle(500);
         `$(`".search`").toggle(500);
+        `$( `"#theImg`" ).remove();
     })
-    `$(`"#1`").click( ()=> {
-        `$(`"#croix`").toggle();
-        `$(`".tableau`").toggle(500);
-        `$(`".rapport`").toggle(500);
-        `$(`".search`").toggle(500);
-        `$(`".search`").prepend('<img id=`"theImg`" src=`"C:/Users/guill/Desktop/Stage BDF/Rapport logs/test/Gull_portrait_ca_usa.jpg`"     width=`"200px`"  height=`"200px `"/>')
-    })
+    " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse){
+        $indexId++
+        "`$(`"#" + $indexId + "`").click( ()=> {
+            `$(`"#croix`").toggle();
+            `$(`".tableau`").toggle(500);
+            `$(`".rapport`").toggle(500);
+            `$(`".search`").toggle(500);
+            `$(`".search`").prepend('<img id=`"theImg`" src=`"C:/Users/guill/Desktop/Stage BDF/Rapport logs/test/Gull_portrait_ca_usa.jpg`"     width=`"200px`"  height=`"200px`"/>')
+        })`n"
+    }) + "
 </script>
 "
 
