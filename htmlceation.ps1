@@ -79,6 +79,21 @@ body{
     overflow: hidden;
 }
 
+.error{
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    background: red;
+    z-index: 1;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .hidd{
     display: none;
 }
@@ -102,6 +117,7 @@ body{
 </style>"
 
 $Body = "
+
 <div class=`"accordeon`">
     <div id=`"croix`">
         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z`"/></svg>
@@ -232,7 +248,7 @@ $Body = "
                 "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
             }
             # if image
-            elseif ($extn -eq ".jpg") {  
+            elseif ($extn -eq ".jpg" -Or $extn -eq ".png") {  
                 $pattern = '[\\]'
                 $nameimage = $file.Fullname
                 $nameimage = $nameimage -replace $pattern, '/'
@@ -257,7 +273,7 @@ $Body = "
                 "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
             }
             # if image
-            elseif ($extn -eq ".jpg") {  
+            elseif ($extn -eq ".jpg" -Or $extn -eq ".png") {  
                 $pattern = '[\\]'
                 $nameimage = $file.Fullname
                 $nameimage = $nameimage -replace $pattern, '/'
@@ -277,3 +293,29 @@ ConvertTo-HTML -Title "Tableau" -body $Body -Head $css |  Out-File "index.html"
 
 # ouvre le ficher html
 Start-Process chrome .\index.html
+
+
+# $(if(2 = 2){
+#     <div class=`"error`">
+#         <div class=`"center`">
+#             <h1>You need to have a <b>ini.txt</b> file with</h1>
+#             <p>
+#                 [Titre]<br>
+#                 Banque de France<br>
+#                 <br>
+#                 [Dossiers]<br>
+#                 C:\your file<br>
+#                 C:\your file<br>
+#                 <br>
+#                 [Extension]<br>
+#                 .txt<br>
+#                 .jpg<br>
+#                 <br>
+#                 [Info]<br>
+#                 Name: oui<br>
+#                 Date: oui<br>
+#                 Taille: oui<br>
+#             </p>
+#         </div>
+#     </div>
+# })
