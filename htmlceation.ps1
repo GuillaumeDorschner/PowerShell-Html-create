@@ -1,24 +1,24 @@
 # variable
-$Title = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 1
-$file1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 3
-$file2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 4
-$extension1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 6
-$extension2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 7
-$Name = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 9
-$Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
-$Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
-$htmlgetdate = Get-Content -Path index.html
-
-$find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
-
-$find = $find.replace(' //','')
-$find = $find -split "`n"
-$find = $find -split " "
-# $find = Get-Date $find -Format 'dd'
-
-$index = 0
-$indexId = 0
-
+$(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
+    $Title = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 1
+    $file1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 3
+    $file2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 4
+    $extension1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 6
+    $extension2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 7
+    $Name = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 9
+    $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
+    $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
+    $htmlgetdate = Get-Content -Path index.html
+    
+    $find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
+    
+    $find = $find.replace(' //','')
+    $find = $find -split "`n"
+    $find = $find -split " "
+    
+    $index = 0
+    $indexId = 0
+})
 
 $css = "
 <link rel=`"stylesheet`"  href=`" https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css`"  integrity=`" sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh`"  crossorigin=`" anonymous`">
@@ -132,7 +132,34 @@ body{
 
 $Body = "
 
-<!-- 
+
+" + $(if(![System.IO.File]::Exists("$(Get-Location)\ini.txt")){
+   "<div class=`"error`">
+        <div class=`"center`">
+            <h1>You need to have a <b>ini.txt</b> file with</h1>
+            <p>
+                [Titre]<br>
+                Banque de France<br>
+                <br>
+                [Dossiers]<br>
+                C:\your file<br>
+                C:\your file<br>
+                <br>
+                [Extension]<br>
+                .txt<br>
+                .jpg<br>
+                <br>
+                [Info]<br>
+                Name: oui<br>
+                Date: oui<br>
+                Taille: oui<br>
+            </p>
+        </div>
+    </div>"
+}else{
+    "
+
+<!--
  " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
     "//" + $file.LastWriteTime + " " + $file.Name + "`n"
 }) + "
@@ -325,44 +352,21 @@ $Body = "
             }
     }) + "
 </script>
+"}) + "
 "
 
-# Get-ChildItem "$dossier" -Include ('*.jpg') -recurse | Select-Object Name, Length, CreationTime, LastAccessTime, LastWriteTime | ConvertTo-HTML -Title "Tableau de $dossier" -body $Body -CssUri "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" |  Out-File "test.html"
 
 ConvertTo-HTML -Title "Tableau" -body $Body -Head $css |  Out-File "index.html"
 
 # ouvre le ficher html
 Start-Process chrome .\index.html
 
-Write-Output $find[1*3]
-Write-Output $find[1*3+2]
-Write-Output $($(Get-Date $($find[3])) -lt $(Get-Date 29/05/2011))
 
-# $(if(2 = 2){
-#     <div class=`"error`">
-#         <div class=`"center`">
-#             <h1>You need to have a <b>ini.txt</b> file with</h1>
-#             <p>
-#                 [Titre]<br>
-#                 Banque de France<br>
-#                 <br>
-#                 [Dossiers]<br>
-#                 C:\your file<br>
-#                 C:\your file<br>
-#                 <br>
-#                 [Extension]<br>
-#                 .txt<br>
-#                 .jpg<br>
-#                 <br>
-#                 [Info]<br>
-#                 Name: oui<br>
-#                 Date: oui<br>
-#                 Taille: oui<br>
-#             </p>
-#         </div>
-#     </div>
-# })
+# Write-Output $(Get-date $($find[$($counter*3)])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")
 
+# Write-Output $($(Get-Date 14:37:07) -lt $(Get-Date 15:34:10))
+
+Write-Output $find
 
 
 
