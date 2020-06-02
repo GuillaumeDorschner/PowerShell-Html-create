@@ -7,6 +7,14 @@ $extension2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Obje
 $Name = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 9
 $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
 $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
+$htmlgetdate = Get-Content -Path index.html
+
+$find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
+
+$find = $find.replace(' //','')
+$find = $find -split "`n"
+$find = $find -split " "
+# $find = Get-Date $find -Format 'dd'
 
 $index = 0
 $indexId = 0
@@ -98,6 +106,12 @@ body{
     display: none;
 }
 
+.refresh{
+    position: absolute;
+    left: 10px;
+    top: 210px;
+}
+
 .search{
     width: 50%;
     margin: auto;
@@ -118,6 +132,15 @@ body{
 
 $Body = "
 
+<!-- 
+ " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
+    "//" + $file.LastWriteTime + " " + $file.Name + "`n"
+}) + "
+ " + $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
+    "//" + $file.LastWriteTime + " " + $file.Name + "`n"
+}) + "
+-->
+
 <div class=`"accordeon`">
     <div id=`"croix`">
         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z`"/></svg>
@@ -127,6 +150,8 @@ $Body = "
     </div>
 </div>
 <div class=`"date`">" + $(Get-Date -Format "dd/MM/yyyy") + "</div>
+
+
 <div class=`"top`">
     <div class=`"logo`">
         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"150px`" version=`"1.1`" viewBox=`"-6 0 591 591.1795`" width=`"150px`" class=`"`">
@@ -172,6 +197,7 @@ $Body = "
             })
             <th>LastAccessTime</th>
             <th>LastWriteTime</th>
+            <th>Any Changes ?</th>
         </tr>
         </thead>
         <tbody>
@@ -191,6 +217,13 @@ $Body = "
             }
             "<td>" + $file.LastAccessTime + "</td>"
             "<td>" + $file.LastWriteTime + "</td>"
+            "<td>" + $(for($counter=0; $counter -lt $letters.Length; $counter++){
+                $(if($find[$counter*3+2] -eq $file.Name){
+                    $(if($(Get-date $($find[$counter*3])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")){
+                        "X"
+                    })
+                })
+            }) + "</td>"
             "</tr>"
         })
         $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
@@ -209,6 +242,13 @@ $Body = "
             }
             "<td>" + $file.LastAccessTime + "</td>"
             "<td>" + $file.LastWriteTime + "</td>"
+            "<td>" + $(for($counter=0; $counter -lt $letters.Length; $counter++){
+                $(if($find[$counter*3+2] -eq $file.Name){
+                    $(if($(Get-date $($find[$counter*3])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")){
+                        "X"
+                    })
+                })
+            }) + "</td>"
             "</tr>"
         })
         </tbody>
@@ -294,6 +334,9 @@ ConvertTo-HTML -Title "Tableau" -body $Body -Head $css |  Out-File "index.html"
 # ouvre le ficher html
 Start-Process chrome .\index.html
 
+Write-Output $find[1*3]
+Write-Output $find[1*3+2]
+Write-Output $($(Get-Date $($find[3])) -lt $(Get-Date 29/05/2011))
 
 # $(if(2 = 2){
 #     <div class=`"error`">
@@ -319,3 +362,13 @@ Start-Process chrome .\index.html
 #         </div>
 #     </div>
 # })
+
+
+
+
+
+# <div class=`"refresh`">
+#     <a href = `"$(Get-Location)\htmlceation.ps1`">
+#         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z`"/></svg>
+#     </a>
+# </div>   
