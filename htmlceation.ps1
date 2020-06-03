@@ -13,8 +13,8 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     $find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
     
     $find = $find.replace(' //','')
-    $find = $find -split "`n"
-    $find = $find -split " "
+    $yah = $find -split "`n"
+    $find = $yah -split " "
     
     $index = 0
     $indexId = 0
@@ -244,12 +244,22 @@ $Body = "
             }
             "<td>" + $file.LastAccessTime + "</td>"
             "<td>" + $file.LastWriteTime + "</td>"
-            "<td>" + $(for($counter=0; $counter -lt $letters.Length; $counter++){
-                $(if($find[$counter*3+2] -eq $file.Name){
-                    $(if($(Get-date $($find[$counter*3])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")){
-                        "X"
-                    })
-                })
+            "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
+                if($find[$counter*3+2] -eq $file.Name){
+                    $woo = $file.LastWriteTime -split " "
+                    $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
+                    $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
+
+                    if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
+                            "X"
+                    } else {
+                        if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
+                            " "
+                        }else{
+                            "X"
+                        }
+                    }
+                }
             }) + "</td>"
             "</tr>"
         })
@@ -269,12 +279,22 @@ $Body = "
             }
             "<td>" + $file.LastAccessTime + "</td>"
             "<td>" + $file.LastWriteTime + "</td>"
-            "<td>" + $(for($counter=0; $counter -lt $letters.Length; $counter++){
-                $(if($find[$counter*3+2] -eq $file.Name){
-                    $(if($(Get-date $($find[$counter*3])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")){
-                        "X"
-                    })
-                })
+            "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
+                if($find[$counter*3+2] -eq $file.Name){
+                    $woo = $file.LastWriteTime -split " "
+                    $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
+                    $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
+
+                    if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
+                            "X"
+                    } else {
+                        if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
+                            " "
+                        }else{
+                            "X"
+                        }
+                    }
+                }
             }) + "</td>"
             "</tr>"
         })
@@ -366,10 +386,17 @@ Start-Process chrome .\index.html
 
 # Write-Output $($(Get-Date 14:37:07) -lt $(Get-Date 15:34:10))
 
-Write-Output $find
+# Write-Output $((get-date 28/05/2020) -lt (get-date 28/05/2020))
 
 
-
+if($find[3+2] -eq "mmmm.png"){
+    $hey = $find[3][3] + $find[3][4] + $find[3][2] + $find[3][0] + $find[3][1] + $find[3][5] + $find[3][6] + $find[3][7] + $find[3][8] + $find[3][9]
+    if ((get-date $hey) -lt (get-date 29/05/2020)) {
+        if ((get-date $find[3+1]) -lt (get-date 19:26:49)) {
+            Write-Output heyy
+        }
+    }
+}
 
 # <div class=`"refresh`">
 #     <a href = `"$(Get-Location)\htmlceation.ps1`">
