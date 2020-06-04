@@ -11,6 +11,8 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
     $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
     
+    $folders = @('C:\Users\guill\Desktop\Stage BDF\Rapport logs\test','C:\Users\guill\Desktop\Stage BDF\PowerShell\metadonne\Fichers')
+
     if([System.IO.File]::Exists("$(Get-Location)\index.html")){
 
         $htmlgetdate = Get-Content -Path index.html
@@ -165,11 +167,10 @@ $Body = "
     "
 
 <!--
- " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
-    "//" + $file.LastWriteTime + " " + $file.Name + "`n"
-}) + "
- " + $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
-    "//" + $file.LastWriteTime + " " + $file.Name + "`n"
+ " + $(foreach($folder in $folders){
+        $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse) {
+             "//" + $file.LastWriteTime + " " + $file.Name + "`n"
+        })
 }) + "
 -->
 
@@ -207,8 +208,9 @@ $Body = "
 <h3>Rapport du " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
     <div class=`"rapport`">
         <ul>
-            <li>" + (Get-ChildItem $file1 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $file1 -Leaf) + "</b></li>
-            <li>" + (Get-ChildItem $file2 -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $file2 -Leaf) + "</b></li>
+            $(foreach($folder in $folders){
+                "<li>" + (Get-ChildItem $folder -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
+            })
         </ul>
     </div>
 </div>
@@ -233,75 +235,42 @@ $Body = "
         </tr>
         </thead>
         <tbody>
-        $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse) {
-            $index++
-            "<tr>"
-            "<td>" + $index + "</th>"
-            if($Name -like '*Oui*'){
-                "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
-            }
-            if($Taille -like '*Oui*'){
-                "<td>" + $file.Length + "</td>"
-            }
-            "<td>" + $file.Fullname + "</td>"
-            if($Date -like '*Oui*'){
-                "<td>" + $file.CreationTime + "</td>"
-            }
-            "<td>" + $file.LastAccessTime + "</td>"
-            "<td>" + $file.LastWriteTime + "</td>"
-            "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
-                if($find[$counter*3+2] -eq $file.Name){
-                    $woo = $file.LastWriteTime -split " "
-                    $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
-                    $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
-
-                    if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
-                            "X"
-                    } else {
-                        if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
-                            " "
-                        }else{
-                            "X"
+        $(foreach($folder in $folders){
+            $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse) {
+                $index++
+                "<tr>"
+                "<td>" + $index + "</th>"
+                if($Name -like '*Oui*'){
+                    "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
+                }
+                if($Taille -like '*Oui*'){
+                    "<td>" + $file.Length + "</td>"
+                }
+                "<td>" + $file.Fullname + "</td>"
+                if($Date -like '*Oui*'){
+                    "<td>" + $file.CreationTime + "</td>"
+                }
+                "<td>" + $file.LastAccessTime + "</td>"
+                "<td>" + $file.LastWriteTime + "</td>"
+                "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
+                    if($find[$counter*3+2] -eq $file.Name){
+                        $woo = $file.LastWriteTime -split " "
+                        $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
+                        $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
+    
+                        if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
+                                "X"
+                        } else {
+                            if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
+                                " "
+                            }else{
+                                "X"
+                            }
                         }
                     }
-                }
-            }) + "</td>"
-            "</tr>"
-        })
-        $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse) {
-            $index++
-            "<tr>"
-            "<td>" + $index + "</th>"
-            if($Name -like '*Oui*'){
-                "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
-            }
-            if($Taille -like '*Oui*'){
-                "<td>" + $file.Length + "</td>"
-            }
-            "<td>" + $file.Fullname + "</td>"
-            if($Date -like '*Oui*'){
-                "<td>" + $file.CreationTime + "</td>"
-            }
-            "<td>" + $file.LastAccessTime + "</td>"
-            "<td>" + $file.LastWriteTime + "</td>"
-            "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
-                if($find[$counter*3+2] -eq $file.Name){
-                    $woo = $file.LastWriteTime -split " "
-                    $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
-                    $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
-
-                    if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
-                            "X"
-                    } else {
-                        if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
-                            " "
-                        }else{
-                            "X"
-                        }
-                    }
-                }
-            }) + "</td>"
-            "</tr>"
+                }) + "</td>"
+                "</tr>"
+            })
         })
         </tbody>
     </table>
@@ -326,55 +295,32 @@ $Body = "
         `$(`".search`").toggle(500);
         `$( `"#theImg`" ).remove();
     })
-    " + $(foreach($file in Get-ChildItem "$file1" -Include ("*$extension1","*$extension2") -recurse){
-        $indexId++
-        $extn = [IO.Path]::GetExtension($file)
-        "`$(`"#" + $indexId + "`").click( ()=> {
-            `$(`"#croix`").toggle();
-            `$(`".tableau`").toggle(500);
-            `$(`".rapport`").toggle(500);
-            `$(`".search`").toggle(500);"
-            # if text
-            if ($extn -eq ".txt") {
-                $textfile = Get-Content $file
-                "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
-            }
-            # if image
-            elseif ($extn -eq ".jpg" -Or $extn -eq ".png") {  
-                $pattern = '[\\]'
-                $nameimage = $file.Fullname
-                $nameimage = $nameimage -replace $pattern, '/'
-                "`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`" height=`"400px`"/>')})`n"
-            }
-            # else put error
-            else{
-                "`$(`".search`").prepend('<p id=`"theImg`">The file can t be read. You need to have a .txt / .jpg / .png</p>')})`n" 
-            }
-    }) + "
-    " + $(foreach($file in Get-ChildItem "$file2" -Include ("*$extension1","*$extension2") -recurse){
-        $indexId++
-        $extn = [IO.Path]::GetExtension($file)
-        "`$(`"#" + $indexId + "`").click( ()=> {
-            `$(`"#croix`").toggle();
-            `$(`".tableau`").toggle(500);
-            `$(`".rapport`").toggle(500);
-            `$(`".search`").toggle(500);"
-            # if text
-            if ($extn -eq ".txt") {
-                $textfile = Get-Content $file
-                "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
-            }
-            # if image
-            elseif ($extn -eq ".jpg" -Or $extn -eq ".png") {  
-                $pattern = '[\\]'
-                $nameimage = $file.Fullname
-                $nameimage = $nameimage -replace $pattern, '/'
-                "`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`" height=`"400px`"/>')})`n"
-            }
-            # else put error
-            else{
-                "`$(`".search`").prepend('<p id=`"theImg`">The file can t be read. You need to have a .txt / .jpg / .png</p>')})`n" 
-            }
+    " + $(foreach($folder in $folders){
+        $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse){
+            $indexId++
+            $extn = [IO.Path]::GetExtension($file)
+            "`$(`"#" + $indexId + "`").click( ()=> {
+                `$(`"#croix`").toggle();
+                `$(`".tableau`").toggle(500);
+                `$(`".rapport`").toggle(500);
+                `$(`".search`").toggle(500);"
+                # if text
+                if ($extn -eq ".txt") {
+                    $textfile = Get-Content $file
+                    "`$(`".search`").prepend('<p id=`"theImg`">" + $textfile + "</p>')})`n"  
+                }
+                # if image
+                elseif ($extn -eq ".jpg" -Or $extn -eq ".png") {  
+                    $pattern = '[\\]'
+                    $nameimage = $file.Fullname
+                    $nameimage = $nameimage -replace $pattern, '/'
+                    "`$(`".search`").prepend('<img id=`"theImg`" src=`"" + $nameimage + "`" height=`"400px`"/>')})`n"
+                }
+                # else put error
+                else{
+                    "`$(`".search`").prepend('<p id=`"theImg`">The file can t be read. You need to have a .txt / .jpg / .png</p>')})`n" 
+                }
+        })
     }) + "
 </script>
 "}) + "
@@ -398,3 +344,8 @@ Start-Process chrome .\index.html
 #         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z`"/></svg>
 #     </a>
 # </div>   
+
+
+foreach($folder in $folders){
+    Write-Output $folder
+}
