@@ -1,5 +1,4 @@
-
-# if desa
+# si il n'y a pas de ficher ini.txt creation d'aucun variable sinon creation error
 $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     # variable
     $Title = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 1
@@ -11,8 +10,13 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
     $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
     
-    $folders = @('C:\Users\guill\Desktop\Stage BDF\Rapport logs\test','C:\Users\guill\Desktop\Stage BDF\PowerShell\metadonne\Fichers')
-
+    $index = 0
+    $indexId = 0
+    
+    $folders = @($file1,$file2)
+    $extensions = @($extension1,$extension2)
+    
+    # si il n'y a pas de ficher index.html ne pas chercher  error
     if([System.IO.File]::Exists("$(Get-Location)\index.html")){
 
         $htmlgetdate = Get-Content -Path index.html
@@ -22,12 +26,10 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
         $yah = $find -split "`n"
         $find = $yah -split " "
     }
-    
-    $index = 0
-    $indexId = 0
 })
 
 $css = "
+<title>$Title</title>
 <link rel=`"stylesheet`"  href=`" https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css`"  integrity=`" sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh`"  crossorigin=`" anonymous`">
 <link rel=`" stylesheet`"  type=`" text/css`"  href=`" https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css`">
 <style>
@@ -168,7 +170,7 @@ $Body = "
 
 <!--
  " + $(foreach($folder in $folders){
-        $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse) {
+        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse) {
              "//" + $file.LastWriteTime + " " + $file.Name + "`n"
         })
 }) + "
@@ -209,7 +211,7 @@ $Body = "
     <div class=`"rapport`">
         <ul>
             $(foreach($folder in $folders){
-                "<li>" + (Get-ChildItem $folder -Include ("*$extension1","*$extension2") -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
+                "<li>" + (Get-ChildItem $folder -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
             })
         </ul>
     </div>
@@ -236,7 +238,7 @@ $Body = "
         </thead>
         <tbody>
         $(foreach($folder in $folders){
-            $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse) {
+            $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse) {
                 $index++
                 "<tr>"
                 "<td>" + $index + "</th>"
@@ -296,7 +298,7 @@ $Body = "
         `$( `"#theImg`" ).remove();
     })
     " + $(foreach($folder in $folders){
-        $(foreach($file in Get-ChildItem "$folder" -Include ("*$extension1","*$extension2") -recurse){
+        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse){
             $indexId++
             $extn = [IO.Path]::GetExtension($file)
             "`$(`"#" + $indexId + "`").click( ()=> {
@@ -326,26 +328,14 @@ $Body = "
 "}) + "
 "
 
+# creation de la page html
+ConvertTo-HTML -body $Body -Head $css |  Out-File "index.html"
 
-ConvertTo-HTML -Title "Tableau" -body $Body -Head $css |  Out-File "index.html"
-
-# ouvre le ficher html
+# ouvre le ficher html dans chrome
 Start-Process chrome .\index.html
-
-
-# Write-Output $(Get-date $($find[$($counter*3)])) -lt $(Get-Date $file.LastWriteTime -Format "dd/MM/yyyy")
-
-# Write-Output $($(Get-Date 14:37:07) -lt $(Get-Date 15:34:10))
-
-# Write-Output $((get-date 28/05/2020) -lt (get-date 28/05/2020))
 
 # <div class=`"refresh`">
 #     <a href = `"$(Get-Location)\htmlceation.ps1`">
 #         <svg xmlns=`"http://www.w3.org/2000/svg`" height=`"40`" viewBox=`"0 0 24 24`" width=`"40`"><path d=`"M0 0h24v24H0z`" fill=`"none`"/><path d=`"M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z`"/></svg>
 #     </a>
-# </div>   
-
-
-foreach($folder in $folders){
-    Write-Output $folder
-}
+# </div>
