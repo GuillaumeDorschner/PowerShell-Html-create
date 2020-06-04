@@ -1,5 +1,7 @@
-# variable
+
+# if desa
 $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
+    # variable
     $Title = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 1
     $file1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 3
     $file2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 4
@@ -8,13 +10,16 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     $Name = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 9
     $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
     $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
-    $htmlgetdate = Get-Content -Path index.html
     
-    $find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
-    
-    $find = $find.replace(' //','')
-    $yah = $find -split "`n"
-    $find = $yah -split " "
+    if([System.IO.File]::Exists("$(Get-Location)\index.html")){
+
+        $htmlgetdate = Get-Content -Path index.html
+        
+        $find = $htmlgetdate -match "[/][/]\d{2}[/]\d{2}[/]\d{4}"
+        $find = $find.replace(' //','')
+        $yah = $find -split "`n"
+        $find = $yah -split " "
+    }
     
     $index = 0
     $indexId = 0
@@ -387,16 +392,6 @@ Start-Process chrome .\index.html
 # Write-Output $($(Get-Date 14:37:07) -lt $(Get-Date 15:34:10))
 
 # Write-Output $((get-date 28/05/2020) -lt (get-date 28/05/2020))
-
-
-if($find[3+2] -eq "mmmm.png"){
-    $hey = $find[3][3] + $find[3][4] + $find[3][2] + $find[3][0] + $find[3][1] + $find[3][5] + $find[3][6] + $find[3][7] + $find[3][8] + $find[3][9]
-    if ((get-date $hey) -lt (get-date 29/05/2020)) {
-        if ((get-date $find[3+1]) -lt (get-date 19:26:49)) {
-            Write-Output heyy
-        }
-    }
-}
 
 # <div class=`"refresh`">
 #     <a href = `"$(Get-Location)\htmlceation.ps1`">
