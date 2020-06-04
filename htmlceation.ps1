@@ -1,14 +1,14 @@
 # si il n'y a pas de ficher ini.txt creation d'aucun variable sinon creation error
 $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     # variable
-    $Title = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 1
-    $file1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 3
-    $file2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 4
-    $extension1 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 6
-    $extension2 = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 7
-    $Name = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 9
-    $Date = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 10
-    $Taille = Get-Content -Path ini.txt | where { $_ -ne "$null" } | Select-Object -Index 11
+    $Title = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 1
+    $file1 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 3
+    $file2 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 4
+    $extension1 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 6
+    $extension2 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 7
+    $Name = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 9
+    $Date = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 10
+    $Taille = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 11
     
     $index = 0
     $indexId = 0
