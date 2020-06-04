@@ -10,6 +10,8 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
     $Date = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 10
     $Taille = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 11
     
+
+    $conteurnouveau = 0
     $index = 0
     $indexId = 0
     
@@ -256,20 +258,24 @@ $Body = "
                 "<td>" + $file.LastWriteTime + "</td>"
                 "<td>" + $(for($counter=0; $counter -lt $yah.Length; $counter++){
                     if($find[$counter*3+2] -eq $file.Name){
+                        $conteurnouveau++
                         $woo = $file.LastWriteTime -split " "
                         $datefrancaisdernier = $woo[0][3] + $woo[0][4] + $woo[0][2] + $woo[0][0] + $woo[0][1] + $woo[0][5] + $woo[0][6] + $woo[0][7] + $woo[0][8] + $woo[0][9]
                         $datefrancaishtml = $find[$counter*3][3] + $find[$counter*3][4] + $find[$counter*3][2] + $find[$counter*3][0] + $find[$counter*3][1] + $find[$counter*3][5] + $find[$counter*3][6] + $find[$counter*3][7] + $find[$counter*3][8] + $find[$counter*3][9]
     
                         if($(Get-date $datefrancaishtml) -lt $(Get-Date $datefrancaisdernier)){
-                                "X"
+                                "~"
                         } else {
                             if((get-date $woo[1]) -eq (get-date $find[$counter*3+1])){
-                                " "
+                                "="
                             }else{
-                                "X"
+                                "~"
                             }
                         }
                     }
+                })
+                $(if($conteurnouveau -eq 0){
+                    "New"
                 }) + "</td>"
                 "</tr>"
             })
