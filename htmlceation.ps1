@@ -1,22 +1,60 @@
-# si il n'y a pas de ficher ini.txt creation d'aucun variable sinon creation error
-$(if(([System.IO.File]::Exists("$(Get-Location)\ini.txt"))){
-    # variable
-    $Title = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 1
-    $file1 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 3
-    $file2 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 4
-    $extension1 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 6
-    $extension2 = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 7
-    $Name = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 9
-    $Date = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 10
-    $Taille = Get-Content -Path ini.txt | Where-Object { $_ -ne "$null" } | Select-Object -Index 11
+# si il n'y a pas de ficher parametre.ini creation d'aucun variable sinon creation error
+$(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     
+    # variable recupere dans le parametre.ini
 
+    $ini = @{}
+    switch -regex -file 'parametre.ini'
+    {
+        "^\[(.+)\]$"{
+            $section = $matches[1]
+            $ini[$section] = @{}}
+        "(.+)=(.*)"{
+            $name, $value = $matches[1..2]
+            $ini[$section][$name] = $value
+        }
+    }
+
+    $Title = $ini.Titre.Name
+    $Name = $ini.Infos.Name
+    $Date = $ini.Infos.Date
+    $Taille = $ini.Infos.Taille
+    
+    
+    # initialisations des variables
     $conteurnouveau = 0
     $index = 0
     $indexId = 0
     
-    $folders = @($file1,$file2)
-    $extensions = @($extension1,$extension2)
+    $folders = @()
+    $extensions = @()
+
+    $getinfo = Get-Content -Path parametre.ini
+    $getinfo = $getinfo -split "`n"
+    
+    foreach($lol in $getinfo){
+        if($lol -eq ""){
+            $ok = 0
+        }
+        if($ok -eq 1){
+            $folders += $lol
+        }
+        if($lol -eq "[Dossiers]"){
+            $ok = 1
+        }
+    }
+    
+    foreach($lol in $getinfo){
+        if($lol -eq ""){
+            $ok = 0
+        }
+        if($ok -eq 1){
+            $extensions += $lol
+        }
+        if($lol -eq "[Extensions]"){
+            $ok = 1
+        }
+    }
     
     # si il n'y a pas de ficher index.html ne pas chercher  error
     if([System.IO.File]::Exists("$(Get-Location)\index.html")){
@@ -144,26 +182,26 @@ body{
 $Body = "
 
 
-" + $(if(![System.IO.File]::Exists("$(Get-Location)\ini.txt")){
+" + $(if(![System.IO.File]::Exists("$(Get-Location)\parametre.ini")){
    "<div class=`"error`">
         <div class=`"center`">
-            <h1>You need to have a <b>ini.txt</b> file with</h1>
+            <h1>You need to have a <b>parametre.ini</b> file with</h1>
             <p>
-                [Titre]<br>
-                Banque de France<br>
-                <br>
-                [Dossiers]<br>
-                C:\your file<br>
-                C:\your file<br>
-                <br>
-                [Extension]<br>
-                .txt<br>
-                .jpg<br>
-                <br>
-                [Info]<br>
-                Name: oui<br>
-                Date: oui<br>
-                Taille: oui<br>
+            [Titre]<br>
+            Name=Banque de France<br>
+            <br>
+            [Dossiers]<br>
+            C:\Users\guill\Desktop\Stage BDF\PowerShell\metadonne\Fichers<br>
+            C:\Users\guill\Desktop\Stage BDF\Rapport logs\test<br>
+            <br>
+            [Extensions]<br>
+            .txt<br>
+            .jpg<br>
+            <br>
+            [Infos]<br>
+            Name=oui<br>
+            Date=oui<br>
+            Taille=oui<br>
             </p>
         </div>
     </div>"
@@ -223,14 +261,14 @@ $Body = "
         <thead>
         <tr>
             <th>#</th>
-            $(if($Name -like '*Oui*'){
+            $(if($Name -like 'oui'){
                 "<th>Name</th>"
             }
-            if($Taille -like '*Oui*'){
+            if($Taille -like 'oui'){
                 "<th>Length</th>"
             }
             "<th>Path</th>"
-            if($Date -like '*Oui*'){
+            if($Date -like 'oui'){
                 "<th>CreationTime</th>"
             })
             <th>LastAccessTime</th>
@@ -244,14 +282,14 @@ $Body = "
                 $index++
                 "<tr>"
                 "<td>" + $index + "</th>"
-                if($Name -like '*Oui*'){
-                    "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like '*Oui*'){ $file.Name }if($Taille -like '*Oui*'){" / " + $file.Length }if($Date -like '*Oui*'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
+                if($Name -like 'oui'){
+                    "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like 'oui'){ $file.Name }if($Taille -like 'oui'){" / " + $file.Length }if($Date -like 'oui'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
                 }
-                if($Taille -like '*Oui*'){
+                if($Taille -like 'oui'){
                     "<td>" + $file.Length + "</td>"
                 }
                 "<td>" + $file.Fullname + "</td>"
-                if($Date -like '*Oui*'){
+                if($Date -like 'oui'){
                     "<td>" + $file.CreationTime + "</td>"
                 }
                 "<td>" + $file.LastAccessTime + "</td>"
