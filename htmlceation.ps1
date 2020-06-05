@@ -28,6 +28,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     
     $folders = @()
     $extensions = @()
+    $exclusions = @()
 
     $getinfo = Get-Content -Path parametre.ini
     $getinfo = $getinfo -split "`n"
@@ -52,6 +53,18 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
             $extensions += $test
         }
         if($test -eq "[Extensions]"){
+            $ok = 1
+        }
+    }
+    
+    foreach($test in $getinfo){
+        if($test -eq ""){
+            $ok = 0
+        }
+        if($ok -eq 1){
+            $exclusions += $test
+        }
+        if($test -eq "[Exclusions]"){
             $ok = 1
         }
     }
@@ -195,8 +208,7 @@ $Body = "
             Name=Banque de France<br>
             <br>
             [Dossiers]<br>
-            C:\Users\guill\Desktop\Stage BDF\PowerShell\metadonne\Fichers<br>
-            C:\Users\guill\Desktop\Stage BDF\Rapport logs\test<br>
+            C:\Path<br>
             <br>
             [Extensions]<br>
             .txt<br>
@@ -206,6 +218,9 @@ $Body = "
             Name=oui<br>
             Date=oui<br>
             Taille=oui<br>
+            <br>
+            [Exclusions]<br>
+            exemple.txt<br>
             </p>
         </div>
     </div>"
@@ -214,7 +229,7 @@ $Body = "
 
 <!--
  " + $(foreach($folder in $folders){
-        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse) {
+        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude $exclusions) {
              "//" + $file.LastWriteTime + " " + $file.Name + "`n"
         })
 }) + "
@@ -255,7 +270,7 @@ $Body = "
     <div class=`"rapport`">
         <ul>
             $(foreach($folder in $folders){
-                "<li>" + (Get-ChildItem $folder -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
+                "<li>" + (Get-ChildItem $folder -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude wayyy.txt).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
             })
         </ul>
     </div>
@@ -282,7 +297,7 @@ $Body = "
         </thead>
         <tbody>
         $(foreach($folder in $folders){
-            $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse) {
+            $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude $exclusions) {
                 $index++
                 "<tr>"
                 "<td>" + $index + "</th>"
@@ -346,7 +361,7 @@ $Body = "
         `$( `"#theImg`" ).remove();
     })
     " + $(foreach($folder in $folders){
-        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse){
+        $(foreach($file in Get-ChildItem "$folder" -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude $exclusions){
             $indexId++
             $extn = [IO.Path]::GetExtension($file)
             "`$(`"#" + $indexId + "`").click( ()=> {
