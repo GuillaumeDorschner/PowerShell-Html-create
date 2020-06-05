@@ -32,26 +32,26 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     $getinfo = Get-Content -Path parametre.ini
     $getinfo = $getinfo -split "`n"
     
-    foreach($lol in $getinfo){
-        if($lol -eq ""){
+    foreach($test in $getinfo){
+        if($test -eq ""){
             $ok = 0
         }
         if($ok -eq 1){
-            $folders += $lol
+            $folders += $test
         }
-        if($lol -eq "[Dossiers]"){
+        if($test -eq "[Dossiers]"){
             $ok = 1
         }
     }
     
-    foreach($lol in $getinfo){
-        if($lol -eq ""){
+    foreach($test in $getinfo){
+        if($test -eq ""){
             $ok = 0
         }
         if($ok -eq 1){
-            $extensions += $lol
+            $extensions += $test
         }
-        if($lol -eq "[Extensions]"){
+        if($test -eq "[Extensions]"){
             $ok = 1
         }
     }
@@ -67,6 +67,8 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
         $find = $yah -split " "
     }
 })
+
+# le contenu du css
 
 $css = "
 <title>$Title</title>
@@ -178,6 +180,8 @@ body{
     color: #ffffff;
 }
 </style>"
+
+#  le contenu du html
 
 $Body = "
 
