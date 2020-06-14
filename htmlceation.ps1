@@ -270,7 +270,7 @@ $Body = "
     <div class=`"rapport`">
         <ul>
             $(foreach($folder in $folders){
-                "<li>" + (Get-ChildItem $folder -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude wayyy.txt).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
+                "<li>" + (Get-ChildItem $folder -Include ($(foreach($extension in $extensions){"*" + $extension})) -recurse  -exclude $exclusions).Count + "<b> fichiers </b>dans le repertoire <b>" + (Split-Path $folder -Leaf) + "</b></li>"
             })
         </ul>
     </div>
