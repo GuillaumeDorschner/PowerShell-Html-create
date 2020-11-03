@@ -9,6 +9,7 @@ It's a powershell programme
 ```
 
 # Parametre.ini
+```
 [Titre]
 Name=Your Title
 
@@ -27,7 +28,7 @@ Taille=oui
 
 [Exclusions]
 All folder you don't want put the path
-
+```
 # Example
 
 # MIT License
