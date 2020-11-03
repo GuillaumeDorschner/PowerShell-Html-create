@@ -333,7 +333,7 @@ $Body = "
 </div>
 <br>
 <div class=`"search hidd`">
-    <p>Resultat de la recherche via le script</p>
+    <p>Result of the search via the script</p>
 </div>
 <div class=`" bottom`" >
     <h3>Something</h3>
