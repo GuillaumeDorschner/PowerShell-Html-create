@@ -38,7 +38,7 @@ All folder you don't want put the path
 ```
 # Example
 
-![image](https://user-images.githubusercontent.com/44686652/98031969-96507800-1e13-11eb-968b-3688a1a86968.png)
+![image](https://user-images.githubusercontent.com/44686652/98032218-f810e200-1e13-11eb-9198-e356873dc0e7.png)
 
 # MIT License
 Copyright (c) 2020 Guillaume Dorschner
