@@ -38,6 +38,8 @@ All folder you don't want put the path
 ```
 # Example
 
+![image](https://user-images.githubusercontent.com/44686652/98031969-96507800-1e13-11eb-968b-3688a1a86968.png)
+
 # MIT License
 Copyright (c) 2020 Guillaume Dorschner
 
