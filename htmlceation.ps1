@@ -205,7 +205,7 @@ $Body = "
             <h1>You need to have a <b>parametre.ini</b> file with</h1>
             <p>
             [Titre]<br>
-            Name=Banque de France<br>
+            Name=Title<br>
             <br>
             [Dossiers]<br>
             C:\Path<br>
@@ -345,7 +345,7 @@ $Body = "
     <p>Resultat de la recherche via le script</p>
 </div>
 <div class=`" bottom`" >
-    <h3>Banque de France - 2020</h3>
+    <h3>Something</h3>
 </div>
 <script  src=`" https://code.jquery.com/jquery-3.5.1.js`"   integrity=`" sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=`"   crossorigin=`" anonymous`" ></script>
 <script type=`" text/javascript`"  charset=`" utf8`"  src=`" https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js`" ></script>
