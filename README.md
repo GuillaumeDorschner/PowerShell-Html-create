@@ -2,7 +2,16 @@
 The purpose of this program is to be able to Create a html page of your folder
 It's a powershell programme
 
+🚧 You need to Allow execution of PowerShell scripts for thatexecute powershell onSUPER user on type this:
+
+```powershell
+Set-ExecutionPolicy RemoteSigned
+```
+
 🚧 You need to configure the parametre.ini
+
+
+To execute the programme in the powershell is this commande
 
 ```
 ./htmlceation.ps1
