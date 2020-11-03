@@ -1,7 +1,7 @@
-# si il n'y a pas de ficher parametre.ini creation d'aucun variable sinon creation error
+# if there is no parametre.ini file creation of no variable otherwise creation error
 $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     
-    # variable recupere dans le parametre.ini
+    # variable retrieved in the .ini parameter
 
     $ini = @{}
     switch -regex -file 'parametre.ini'
@@ -21,7 +21,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     $Taille = $ini.Infos.Taille
     
     
-    # initialisations des variables
+    # initializations of variables
     $conteurnouveau = 0
     $index = 0
     $indexId = 0
@@ -69,7 +69,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
         }
     }
     
-    # si il n'y a pas de ficher index.html ne pas chercher  error
+    # if there is no index.html file don't look for error
     if([System.IO.File]::Exists("$(Get-Location)\index.html")){
 
         $htmlgetdate = Get-Content -Path index.html
@@ -81,7 +81,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
     }
 })
 
-# le contenu du css
+# the content of the css
 
 $css = "
 <title>$Title</title>
@@ -194,7 +194,7 @@ body{
 }
 </style>"
 
-#  le contenu du html
+# the content of the html
 
 $Body = "
 
@@ -248,7 +248,7 @@ $Body = "
 
 <div class=`"top`">
     <div class=`"logo`">
-        #put the image there
+        # put the image there
         <img src="" alt="logo">
     </div>
     <span></span>
@@ -382,10 +382,10 @@ $Body = "
 "}) + "
 "
 
-# creation de la page html
+# creation of the html page
 ConvertTo-HTML -body $Body -Head $css |  Out-File "index.html"
 
-# ouvre le ficher html dans chrome
+# open the html file in chrome
 Start-Process chrome .\index.html
 
 # <div class=`"refresh`">
