@@ -249,7 +249,7 @@ $Body = "
 <div class=`"top`">
     <div class=`"logo`">
         # put the image there
-        <img src="" alt="logo">
+        <img src=`"`">
     </div>
     <span></span>
     <div class=`"title`">
