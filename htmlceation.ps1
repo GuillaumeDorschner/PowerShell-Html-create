@@ -220,7 +220,7 @@ $Body = "
             Taille=yes<br>
             <br>
             [Exclusions]<br>
-            exemple.txt<br>
+            example.txt<br>
             </p>
         </div>
     </div>"
@@ -257,7 +257,7 @@ $Body = "
     </div>
 </div>
 <div class=`"container`">
-<h3>Rapport du " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
+<h3>Report of the " + (Get-Date -Format "dd") + " " + ((Get-Culture).DateTimeFormat.GetMonthName(8)) + " " + (Get-Date -Format "yyyy") + "</h3>
     <div class=`"rapport`">
         <ul>
             $(foreach($folder in $folders){
