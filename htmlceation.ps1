@@ -215,9 +215,9 @@ $Body = "
             .jpg<br>
             <br>
             [Infos]<br>
-            Name=oui<br>
-            Date=oui<br>
-            Taille=oui<br>
+            Name=yes<br>
+            Date=yes<br>
+            Taille=yes<br>
             <br>
             [Exclusions]<br>
             exemple.txt<br>
@@ -271,14 +271,14 @@ $Body = "
         <thead>
         <tr>
             <th>#</th>
-            $(if($Name -like 'oui'){
+            $(if($Name -like 'yes'){
                 "<th>Name</th>"
             }
-            if($Taille -like 'oui'){
+            if($Taille -like 'yes'){
                 "<th>Length</th>"
             }
             "<th>Path</th>"
-            if($Date -like 'oui'){
+            if($Date -like 'yes'){
                 "<th>CreationTime</th>"
             })
             <th>LastAccessTime</th>
@@ -292,14 +292,14 @@ $Body = "
                 $index++
                 "<tr>"
                 "<td>" + $index + "</th>"
-                if($Name -like 'oui'){
-                    "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like 'oui'){ $file.Name }if($Taille -like 'oui'){" / " + $file.Length }if($Date -like 'oui'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
+                if($Name -like 'yes'){
+                    "<td id=`""$($index)"`"><a href="`"file:///$file`"" title="`"$(if($Name -like 'yes'){ $file.Name }if($Taille -like 'yes'){" / " + $file.Length }if($Date -like 'yes'){" / " + $file.CreationTime })`"">" + $file.Name + "</a></td>"
                 }
-                if($Taille -like 'oui'){
+                if($Taille -like 'yes'){
                     "<td>" + $file.Length + "</td>"
                 }
                 "<td>" + $file.Fullname + "</td>"
-                if($Date -like 'oui'){
+                if($Date -like 'yes'){
                     "<td>" + $file.CreationTime + "</td>"
                 }
                 "<td>" + $file.LastAccessTime + "</td>"
