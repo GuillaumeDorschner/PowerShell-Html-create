@@ -24,9 +24,9 @@ Name=Your Title
 C:\Your path
 
 [Infos]
-Name=oui
-Date=oui
-Taille=oui
+Name=yes
+Date=yes
+Taille=yes
 
 [Extensions]
 .txt
