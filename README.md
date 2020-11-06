@@ -17,11 +17,11 @@ To execute the programme in the powershell is this commande
 
 # Parametre.ini
 ```
-[Titre]
-Name=Your Title
+[Title]
+Name=Title
 
-[Dossiers]
-C:\Your path
+[Files]
+C:\"Your Path"
 
 [Infos]
 Name=yes
