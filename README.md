@@ -1,5 +1,5 @@
 # PowerShell-Html-create
-The purpose of this program is to be able to Create a html page of your folder. It's a powershell programme.
+The purpose of this program is to be able to Create a html page of your folder. It's a powershell program.
 
 🚧 You need to configure the parametre.ini
 <br/>
