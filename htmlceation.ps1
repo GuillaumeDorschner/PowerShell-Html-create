@@ -15,7 +15,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
         }
     }
 
-    $Title = $ini.Titre.Name
+    $Title = $ini.Title.Name
     $Name = $ini.Infos.Name
     $Date = $ini.Infos.Date
     $Taille = $ini.Infos.Taille
@@ -40,7 +40,7 @@ $(if(([System.IO.File]::Exists("$(Get-Location)\parametre.ini"))){
         if($ok -eq 1){
             $folders += $test
         }
-        if($test -eq "[Dossiers]"){
+        if($test -eq "[Files]"){
             $ok = 1
         }
     }
@@ -204,10 +204,10 @@ $Body = "
         <div class=`"center`">
             <h1>You need to have a <b>parametre.ini</b> file with</h1>
             <p>
-            [Titre]<br>
+            [Title]<br>
             Name=Title<br>
             <br>
-            [Dossiers]<br>
+            [Files]<br>
             C:\Path<br>
             <br>
             [Extensions]<br>
@@ -220,7 +220,7 @@ $Body = "
             Taille=yes<br>
             <br>
             [Exclusions]<br>
-            example.txt<br>
+            C:\Path<br>
             </p>
         </div>
     </div>"
